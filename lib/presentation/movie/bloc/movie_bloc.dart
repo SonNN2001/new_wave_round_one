@@ -12,9 +12,9 @@ part 'movie_event.dart';
 part 'movie_state.dart';
 
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
-  final MovieFromWebApi movieFromWebApi;
+  final MovieRepository movieRepository;
   MovieBloc(
-    this.movieFromWebApi,
+    this.movieRepository,
   ) : super(const MovieState()) {
     on<MovieLoadMorePageEvent>(_onMovieLoadMorePageEvent);
   }
@@ -28,7 +28,7 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
       emit(state.copyWith(status: MovieStatus.loading));
     }
     var result =
-        await movieFromWebApi.getListMovieWithPage(state.currentPage + 1);
+        await movieRepository.getListMovieWithPage(state.currentPage + 1);
     result.fold(
         (l) =>
             emit(state.copyWith(error: l, status: MovieStatus.loadedFailure)),
